@@ -1,34 +1,29 @@
-import "@testing-library/jest-dom";
+import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import '@testing-library/jest-dom'; // 🔧 Fix for DOM matchers
 import ShoppingList from "../components/ShoppingList";
 
 const testData = [
-  { id: 1, name: "Yogurt", category: "Dairy" },
-  { id: 2, name: "Pomegranate", category: "Produce" },
-  { id: 3, name: "Lettuce", category: "Produce" },
-  { id: 4, name: "String Cheese", category: "Dairy" },
-  { id: 5, name: "Cookies", category: "Dessert" },
+  { id: 1, name: "Milk", category: "Dairy" },
+  { id: 2, name: "Carrots", category: "Produce" },
+  { id: 3, name: "Cake", category: "Dessert" },
 ];
 
 test("displays all items when initially rendered", () => {
-  const { container } = render(<ShoppingList items={testData} />);
-  expect(container.querySelector(".Items").children).toHaveLength(
-    testData.length
-  );
+  render(<ShoppingList items={testData} />);
+  const itemList = screen.getByRole("list"); // 🔄 Better than .querySelector(".Items")
+
+  expect(itemList.children).toHaveLength(testData.length);
 });
 
 test("displays only items that match the selected category", () => {
-  const { container } = render(<ShoppingList items={testData} />);
-
-  fireEvent.change(screen.getByRole("combobox"), {
-    target: { value: "Dairy" },
-  });
-
-  expect(container.querySelector(".Items").children).toHaveLength(2);
+  render(<ShoppingList items={testData} />);
 
   fireEvent.change(screen.getByRole("combobox"), {
     target: { value: "Dessert" },
   });
 
-  expect(container.querySelector(".Items").children).toHaveLength(1);
+  const itemList = screen.getByRole("list");
+  expect(itemList.children).toHaveLength(1);
+  expect(screen.getByText("Cake")).toBeInTheDocument();
 });

@@ -4,7 +4,7 @@ function Item({ name, category }) {
   const [isInCart, setIsInCart] = useState(false);
 
   function handleAddToCartClick() {
-    setIsInCart((isInCart) => !isInCart);
+    setIsInCart((prevInCart) => !prevInCart);
   }
 
   return (
@@ -15,7 +15,7 @@ function Item({ name, category }) {
         className={isInCart ? "remove" : "add"}
         onClick={handleAddToCartClick}
       >
-        {isInCart ? "Remove From" : "Add to"} Cart
+        {isInCart ? "Remove from" : "Add to"} Cart
       </button>
     </li>
   );
